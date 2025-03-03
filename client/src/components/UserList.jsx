@@ -10,7 +10,8 @@ export default function UserList(){
     const [users, setUsers] = useState([])
 
     useEffect(()=> {
-        userService.getAll().then(result => {
+        userService.getAll()
+            .then(result => {
             setUsers(result)
         }
         )
@@ -130,7 +131,11 @@ export default function UserList(){
                 </tr>
             </thead>
             <tbody>
-                <UserListItem />
+                { users.map( user => <UserListItem 
+                key={user._id} 
+                {...user}
+                 />)}
+                
             </tbody>
             </table>
         </div>

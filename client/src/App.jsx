@@ -7,7 +7,6 @@ function App() {
 
   return (
     <>
-     <body>
         <Header />
 
         {/* <!-- Main component  --> */}
@@ -190,7 +189,6 @@ function App() {
 
         </main>
         <Footer />
-      </body>
     </>
   )
 }
