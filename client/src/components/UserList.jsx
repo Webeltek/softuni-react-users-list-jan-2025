@@ -6,10 +6,12 @@ import Pagination from "./Pagination";
 import Search from "./Search";
 import UserListItem from "./UserListItem";
 import UserCreate from "./UserCreate";
+import UserInfo from "./UserInfo";
 
 export default function UserList(){
     const [users, setUsers] = useState([]);
     const [ showCreate, setShowCreate] = useState(false);
+    const [userIdInfo, setUserIdInfo] = useState(); // Undefined
 
     useEffect(()=> {
         userService.getAll()
@@ -45,6 +47,10 @@ export default function UserList(){
 
         // close modal
         setShowCreate(false);
+    }
+
+    const userInfoClickHandler = (userId)=>{
+        setUserIdInfo(userId);
         
     }
 
@@ -54,11 +60,17 @@ export default function UserList(){
         <Search />
 
         { showCreate && (
-        <UserCreate 
-        onClose={closeCreateUserClickHandler}
-        onSave= {saveCreateUserClickHandler} 
-        />
-        )} 
+            <UserCreate 
+                onClose={closeCreateUserClickHandler}
+                onSave= {saveCreateUserClickHandler} 
+            />)
+        }
+
+        {userIdInfo && (
+            <UserInfo 
+                userId={userIdInfo}
+            />    
+        )}
 
         {/* <!-- Table component --> */}
         <div className="table-wrapper">
@@ -171,7 +183,8 @@ export default function UserList(){
             </thead>
             <tbody>
                 { users.map( user => <UserListItem 
-                key={user._id} 
+                key={user._id}
+                onInfoClick={userInfoClickHandler} 
                 {...user}
                  />)}
                 
