@@ -1,12 +1,32 @@
-export default function UserInfo(){
+import { useEffect, useState } from "react"
+import userService from "../services/userService"
+import { fromIsoDate } from "../utils/datetimeUtils";
+
+export default function UserInfo({
+    userId,
+    onClose
+}){
+    const [user, setUser] = useState({});
+    // const [user, setUser] = useState({address: {}}); default value for address
+
+    useEffect(()=>{
+        userService.getOne(userId).then(user => {
+            
+            setUser(user);
+        })
+    },[userId])
+    
+    console.log(user);
+
+
     return (
-        <div className="overlay">
+        <div onClick={onClose} className="overlay">
             <div className="backdrop"></div>
             <div className="modal">
               <div className="detail-container">
                 <header className="headers">
                   <h2>User Detail</h2>
-                  <button className="btn close">
+                  <button onClick={onClose} className="btn close">
                     <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="xmark"
                       className="svg-inline--fa fa-xmark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
                       <path fill="currentColor"
@@ -17,24 +37,24 @@ export default function UserInfo(){
                 </header>
                 <div className="content">
                   <div className="image-container">
-                    <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png" alt=""
+                    <img src={user.imageUrl} alt=""
                       className="image" />
                   </div>
                   <div className="user-details">
-                    <p>User Id: <strong>62bb0c0eda039e2fdccba57b</strong></p>
+                    <p>User Id: <strong>{user._id}</strong></p>
                     <p>
                       Full Name:
-                      <strong> Peter Johnson </strong>
+                      <strong> {user.firstName} {user.lastName} </strong>
                     </p>
-                    <p>Email: <strong>peter@abv.bg</strong></p>
-                    <p>Phone Number: <strong>0812345678</strong></p>
+                    <p>Email: <strong>{user.email}</strong></p>
+                    <p>Phone Number: <strong>{user.phoneNumber}</strong></p>
                     <p>
                       Address:
-                      <strong> Bulgaria, Sofia, Aleksandar Malinov 78 </strong>
+                      <strong> {user.address?.country}, {user.address?.city}, {user.address?.street} {user.address?.streetNumber} </strong>
                     </p>
 
-                    <p>Created on: <strong>Wednesday, June 28, 2022</strong></p>
-                    <p>Modified on: <strong>Thursday, June 29, 2022</strong></p>
+                    <p>Created on: <strong>{fromIsoDate(user.createdAt)}</strong></p>
+                    <p>Modified on: <strong>{fromIsoDate(user.updatedAt)}</strong></p>
                   </div>
                 </div>
               </div>

@@ -8,6 +8,12 @@ export default {
         return users;
         
     },
+    async getOne(userId){
+        const response = await fetch(`${baseUrl}/${userId}`);
+        const user = await response.json();
+        
+        return user;
+    },
     async create(userData){
         const { country, city, street, streetNumber, ...postData} = userData;
 
@@ -27,11 +33,13 @@ export default {
         const result = await response.json();
         return result;
     },
+    async delete(userId){
+        const response = await fetch(`${baseUrl}/${userId}`, {
+            method: 'DELETE'
+        });
 
-    async getOne(id){
-        const url = baseUrl + `/${id}`;
-        const result = await fetch(url);
-        const user = await result.json();
-        return user;
+        const result = await response.json();
+        return result;
     }
+
 }
