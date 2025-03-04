@@ -15,6 +15,7 @@ export default function UserList(){
     const [userIdInfo, setUserIdInfo] = useState(null); // Undefined holding two states one for showing user info (falsy or truthy) and one for userId value
     const [userIdDelete, setUserIdDelete] = useState(null);
     const [userIdEdit, setUserIdEdit] = useState(null);
+    const [search, setSearch] = useState({});
 
     useEffect(()=> {
         userService.getAll()
@@ -25,6 +26,17 @@ export default function UserList(){
         }
         )
     },[]);
+
+    useEffect(()=>{
+        if(!search.criteria){
+            return;
+        }
+        
+        setUsers(users => users.filter( user => {
+
+            return user[search.criteria] === search.search;
+        }))
+    },[search])
 
     const createUserClickHandler = () =>{
         setShowCreate(true);
@@ -98,12 +110,20 @@ export default function UserList(){
         setUsers( state => state.map( user => user._id === userId ? updatedUser : user))
         // Close modal
         setUserIdEdit(null);
+    }
 
+    const searchSubmitHandler = (e)=>{
+        e.preventDefault();
+
+        const data = new FormData(e.target);
+        const search = Object.fromEntries(data);
+        setSearch(search);
+        
     }
 
     return (
     <section className="card users-container">
-        <Search />
+        <Search onSearch={searchSubmitHandler}/>
 
         { showCreate && (
             <UserCreate 
